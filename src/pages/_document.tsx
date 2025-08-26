@@ -10,7 +10,7 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
         />
-        <title>Tarefas+ | Organize suas tarefas de forma fácil</title>
+        <title>Tasks+ | Organize suas tarefas de forma fácil</title>
       </Head>
       <body className="antialiased">
         <Main />

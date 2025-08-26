@@ -3,3 +3,9 @@
 * {
   font-family: "Roboto", sans-serif !important;
 }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
