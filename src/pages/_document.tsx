@@ -1,8 +1,9 @@
+import { Header } from "@/components/header";
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
-    <Html lang="pt-BR" >
+    <Html lang="pt-BR" className="text-white">
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -12,6 +13,7 @@ export default function Document() {
         />
         <title>Tasks+ | Organize suas tarefas de forma fácil</title>
       </Head>
+      <Header />
       <body className="antialiased">
         <Main />
         <NextScript />
