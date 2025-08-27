@@ -10,7 +10,7 @@ export function Header() {
               Tasks<span className="text-red-600 pl-0.5">+</span>
             </h1>
           </Link>
-          <Link href="/painel" className="bg-neutral-100 text-black py-1 px-3.5 rounded">Meu Painel</Link>
+          <Link href="/painel" className="bg-red-600  py-1 px-3.5 rounded hover:bg-red-500 transition-all duration-400">Meu Painel</Link>
         </nav>
 
         <button className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold">
