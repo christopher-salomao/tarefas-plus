@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export function Header() {
   const { data: session, status } = useSession();
-  const userImageUrl = session?.user?.image;
 
   return (
     <header className="w-full h-19 bg-zinc-900 flex justify-center items-center">

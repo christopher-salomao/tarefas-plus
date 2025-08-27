@@ -1,6 +1,9 @@
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
+
 import Head from "next/head";
 
-function Painel() {
+export default function Painel() {
   return (
     <div className="contentor w-full">
       <Head>
@@ -11,4 +14,19 @@ function Painel() {
   );
 }
 
-export default Painel;
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
+}
