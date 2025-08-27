@@ -1,6 +1,11 @@
+import { useSession, signIn, signOut } from "next-auth/react";
+
 import Link from "next/link";
 
 export function Header() {
+  const { data: session, status } = useSession();
+  const userImageUrl = session?.user?.image;
+
   return (
     <header className="w-full h-19 bg-zinc-900 flex justify-center items-center">
       <section className="px-[18px] w-full max-w-5xl flex justify-between items-center">
@@ -10,12 +15,44 @@ export function Header() {
               Tasks<span className="text-red-600 pl-0.5">+</span>
             </h1>
           </Link>
-          <Link href="/painel" className="bg-red-600  py-1 px-3.5 rounded hover:bg-red-500 transition-all duration-400">Meu Painel</Link>
+          {session?.user && (
+            <Link
+              href="/painel"
+              className="bg-red-600  py-1 px-3.5 rounded hover:bg-red-500 transition-all duration-400"
+            >
+              Meu Painel
+            </Link>
+          )}
         </nav>
 
-        <button className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold">
-          Acessar
-        </button>
+        {status === "loading" ? (
+          <></>
+        ) : session ? (
+          <button
+            className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold flex items-center gap-2"
+            onClick={() => signOut()}
+          >
+            Olá {session?.user?.name}
+            {session.user?.image && (
+              <img
+                src={session?.user?.image as string}
+                alt={session?.user?.name ?? "User"}
+                className="w-8 h-8 rounded-full"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    "../../public/assets/default_avatar.png";
+                }}
+              />
+            )}
+          </button>
+        ) : (
+          <button
+            className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold"
+            onClick={() => signIn("google")}
+          >
+            Acessar
+          </button>
+        )}
       </section>
     </header>
   );

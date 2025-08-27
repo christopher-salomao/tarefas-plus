@@ -1,4 +1,3 @@
-import { Header } from "@/components/header";
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
@@ -13,7 +12,6 @@ export default function Document() {
         />
         <title>Tasks+ | Organize suas tarefas de forma fácil</title>
       </Head>
-      <Header />
       <body className="antialiased">
         <Main />
         <NextScript />
