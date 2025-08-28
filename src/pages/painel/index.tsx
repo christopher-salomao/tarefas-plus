@@ -1,13 +1,27 @@
 import { Textarea } from "@/components/textarea";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+
+import { collection } from "firebase/firestore";
+import { db } from "@/services/firebaseConnection";
 
 import Head from "next/head";
 import { FaShare, FaTrashCan } from "react-icons/fa6";
 
 export default function Painel() {
-  const [textareaLength, setTextareaLength] = useState(0);
+  const [textarea, setTextarea] = useState("");
+  const [publicTask, setPublicTask] = useState(false);
+
+  function handleRegisterTask(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (textarea === "") return;
+
+    alert("Tarefa cadastrada com sucesso!");
+
+    setPublicTask(false);
+  }
 
   return (
     <>
@@ -19,15 +33,15 @@ export default function Painel() {
           <section className="bg-[#171717] w-full flex items-center justify-center">
             <div className="w-full max-w-5xl px-[18px] pb-7 mt-8 *:text-white">
               <h1 className="text-2xl mb-2">Qual a sua tarefa?</h1>
-              <form action="">
+              <form onSubmit={handleRegisterTask}>
                 <div className="w-full h-48 flex flex-col gap-2">
                   <Textarea
                     placeholder="Escreva aqui sua tarefa..."
                     maxLength={2000}
-                    onChange={(e) => setTextareaLength(e.target.value.length)}
+                    onChange={(e) => setTextarea(e.target.value)}
                   />
                   <span className="self-end text-gray-300 text-sm">
-                    {textareaLength}/2000
+                    {textarea.length}/2000
                   </span>
                 </div>
 
@@ -36,6 +50,8 @@ export default function Painel() {
                     type="checkbox"
                     name="chechboxArea"
                     id="chechboxArea"
+                    checked={publicTask}
+                    onChange={(e) => setPublicTask(e.target.checked)}
                     className="w-[18px] h-[18px] accent-red-600"
                   />
                   <label htmlFor="chechboxArea">Deixar tarefa publica?</label>
@@ -80,7 +96,6 @@ export default function Painel() {
                   </button>
                 </div>
               </article>
-
             </div>
           </section>
         </main>
