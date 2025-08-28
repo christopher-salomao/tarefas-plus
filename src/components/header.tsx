@@ -6,7 +6,7 @@ export function Header() {
   const { data: session, status } = useSession();
 
   return (
-    <header className="w-full h-19 bg-zinc-900 flex justify-center items-center">
+    <header className="w-full h-19 bg-zinc-900 flex justify-center items-center *:text-white">
       <section className="px-[18px] w-full max-w-5xl flex justify-between items-center">
         <nav className="flex items-center gap-6">
           <Link href="/" className="text-[32px] font-bold ">
@@ -46,7 +46,7 @@ export function Header() {
           </button>
         ) : (
           <button
-            className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold"
+            className="py-2 px-8 rounded-full border-[1.5px] border-red-600 ansition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold"
             onClick={() => signIn("google")}
           >
             Acessar

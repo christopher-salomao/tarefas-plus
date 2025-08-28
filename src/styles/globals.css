@@ -9,7 +9,15 @@ body {
   height: 100%;
 }
 
+input,
+textarea {
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
 .contentor {
-  background-color: #171717;
   height: calc(100vh - 76px);
 }

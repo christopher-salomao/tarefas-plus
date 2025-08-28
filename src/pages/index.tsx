@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css"
 
 export default function Home() {
   return (
-    <div className="contentor w-full flex flex-col justify-center items-center">
+    <div className="contentor w-full flex flex-col justify-center items-center bg-[#171717]">
       <main>
         <div className="flex flex-col justify-center items-center">
           <Image
@@ -14,7 +14,7 @@ export default function Home() {
             className="max-w-8/10 sm:max-w-[480px] w-auto h-auto object-contain"
           />
         </div>
-        <h1 className="text-center text-2xl/[150%] sm:text-3xl/[150%] my-4">
+        <h1 className="text-center text-2xl/[150%] sm:text-3xl/[150%] my-4 text-white">
           Sistema feito para você organizar <br /> seus estudos e tarefas
         </h1>
 
