@@ -28,10 +28,10 @@ export function Header() {
           <></>
         ) : session ? (
           <button
-            className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold flex items-center gap-2"
+            className="py-2 px-2 md:px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold flex items-center gap-2"
             onClick={() => signOut()}
           >
-            Olá {session?.user?.name}
+            <span className="md:inline-block hidden">Olá {session?.user?.name}</span>
             {session.user?.image && (
               <img
                 src={session?.user?.image as string}
