@@ -1,26 +1,109 @@
 import { Textarea } from "@/components/textarea";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
-import { collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  where,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { db } from "@/services/firebaseConnection";
 
 import Head from "next/head";
 import { FaShare, FaTrashCan } from "react-icons/fa6";
+import toast from "react-hot-toast";
+import { toastStyle } from "@/styles/toastStyle";
+import { on } from "events";
 
-export default function Painel() {
+interface HomeProps {
+  user: {
+    name: string;
+    email: string;
+  };
+}
+
+interface TaskProps {
+  id: string;
+  created: Date;
+  task: string;
+  isPublic: boolean;
+  userName: string;
+  userEmail: string;
+}
+
+export default function Painel({ user }: HomeProps) {
   const [textarea, setTextarea] = useState("");
   const [publicTask, setPublicTask] = useState(false);
+  const [tasksList, setTasksList] = useState<TaskProps[]>([]);
 
-  function handleRegisterTask(event: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    async function loadTasks() {
+      const tasksRef = collection(db, "tasks");
+      const q = query(
+        tasksRef,
+        orderBy("created", "desc"),
+        where("userEmail", "==", user?.email)
+      );
+
+      const onsub = onSnapshot(q, (snapshot) => {
+        console.log(snapshot);
+        let list: TaskProps[] = [];
+
+        snapshot.forEach((doc) => {
+          list.push({
+            id: doc.id,
+            task: doc.data().task,
+            isPublic: doc.data().isPublic,
+            created: doc.data().created,
+            userName: doc.data().userName,
+            userEmail: doc.data().userEmail,
+          });
+        });
+
+        setTasksList(list);
+      });
+    }
+
+    loadTasks();
+  }, [user?.email]);
+
+  async function handleRegisterTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (textarea === "") return;
+    if (textarea === "") {
+      toast.error("Preencha a tarefa!");
+      return;
+    }
 
-    alert("Tarefa cadastrada com sucesso!");
-
-    setPublicTask(false);
+    try {
+      await toast.promise(
+        async () => {
+          await addDoc(collection(db, "tasks"), {
+            task: textarea,
+            isPublic: publicTask,
+            created: new Date(),
+            userEmail: user.email,
+            userName: user.name,
+          });
+        },
+        {
+          loading: "Criando tarefa...",
+          success: "Tarefa criada com sucesso!",
+          error: "Erro ao criar tarefa!",
+        },
+        {
+          style: toastStyle,
+        }
+      );
+      setTextarea("");
+      setPublicTask(false);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -38,6 +121,7 @@ export default function Painel() {
                   <Textarea
                     placeholder="Escreva aqui sua tarefa..."
                     maxLength={2000}
+                    value={textarea}
                     onChange={(e) => setTextarea(e.target.value)}
                   />
                   <span className="self-end text-gray-300 text-sm">
@@ -73,29 +157,33 @@ export default function Painel() {
                 Minhas tarefas
               </h1>
 
-              <article className="mb-4 flex flex-col gap-2 border-[1.5px] border-neutral-700 rounded p-4">
-                <div className="flex items-center gap-2">
-                  <label className="px-0.5 py-1.5 bg-red-600 text-xs text-white rounded">
-                    PÚBLICO
-                  </label>
-                  <button className="hover:scale-108 transition-all duration-400">
-                    <FaShare size={22} color="#fb2c36" />
-                  </button>
-                </div>
+              {tasksList.length > 0 && (
+                <>
+                  {tasksList.map((task) => (
+                    <article key={task.id} className="mb-4 flex flex-col gap-2 border-[1.5px] border-neutral-700 rounded p-4">
+                      {task.isPublic && (
+                        <div className="flex items-center gap-2">
+                          <label className="px-0.5 py-1.5 bg-red-600 text-xs text-white rounded">
+                            PÚBLICO
+                          </label>
+                          <button className="hover:scale-108 transition-all duration-400">
+                            <FaShare size={22} color="#fb2c36" />
+                          </button>
+                        </div>
+                      )}
 
-                <div className="flex items-center justify-between gap-2 w-full">
-                  <p className="grow whitespace-pre-wrap">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    {"\n"}
-                    Ea officia, alias iure quae eius provident explicabo ex
-                    quidem maiores, sit, dolore labore cupiditate corporis
-                    veniam incidunt non at saepe est.
-                  </p>
-                  <button className="text-neutral-600 hover:text-red-700 transition-all duration-400">
-                    <FaTrashCan size={24} color="" />
-                  </button>
-                </div>
-              </article>
+                      <div className="flex items-center justify-between gap-2 w-full">
+                        <p className="grow whitespace-pre-wrap">
+                          {task.task}
+                        </p>
+                        <button className="text-neutral-600 hover:text-red-700 transition-all duration-400">
+                          <FaTrashCan size={24} color="" />
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </>
+              )}
             </div>
           </section>
         </main>
@@ -117,6 +205,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
 
   return {
-    props: {},
+    props: {
+      user: {
+        name: session?.user?.name,
+        email: session?.user?.email,
+      },
+    },
   };
 };
