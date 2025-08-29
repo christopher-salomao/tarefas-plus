@@ -10,6 +10,8 @@ import {
   where,
   query,
   orderBy,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 import { db } from "@/services/firebaseConnection";
 
@@ -106,6 +108,27 @@ export default function Painel({ user }: HomeProps) {
     }
   }
 
+  async function handleDeleteTask(id: string) {
+    try {
+      await toast.promise(
+        async () => {
+          const taskRef = doc(db, "tasks", id);
+          await deleteDoc(taskRef);
+        },
+        {
+          loading: "Deletando tarefa...",
+          success: "Tarefa deletada com sucesso!",
+          error: "Erro ao deletar tarefa!",
+        },
+        {
+          style: toastStyle,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <Head>
@@ -160,7 +183,10 @@ export default function Painel({ user }: HomeProps) {
               {tasksList.length > 0 && (
                 <>
                   {tasksList.map((task) => (
-                    <article key={task.id} className="mb-4 flex flex-col gap-2 border-[1.5px] border-neutral-700 rounded p-4">
+                    <article
+                      key={task.id}
+                      className="mb-4 flex flex-col gap-2 border-[1.5px] border-neutral-700 rounded p-4"
+                    >
                       {task.isPublic && (
                         <div className="flex items-center gap-2">
                           <label className="px-0.5 py-1.5 bg-red-600 text-xs text-white rounded">
@@ -173,11 +199,12 @@ export default function Painel({ user }: HomeProps) {
                       )}
 
                       <div className="flex items-center justify-between gap-2 w-full">
-                        <p className="grow whitespace-pre-wrap">
-                          {task.task}
-                        </p>
-                        <button className="text-neutral-600 hover:text-red-700 transition-all duration-400">
-                          <FaTrashCan size={24} color="" />
+                        <p className="grow whitespace-pre-wrap">{task.task}</p>
+                        <button
+                          className="text-neutral-600 hover:text-red-700 transition-all duration-400"
+                          onClick={() => handleDeleteTask(task.id)}
+                        >
+                          <FaTrashCan size={24} />
                         </button>
                       </div>
                     </article>
