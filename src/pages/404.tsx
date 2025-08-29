@@ -9,7 +9,7 @@ function NotFound() {
       </h2>
       <Link
         href="/"
-        className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold"
+        className="py-2 px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:text-white hover:font-bold"
       >
         Voltar para a página inicial
       </Link>

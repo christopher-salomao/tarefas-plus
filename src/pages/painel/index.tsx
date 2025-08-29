@@ -20,6 +20,7 @@ import { FaShare, FaTrashCan } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import { toastStyle } from "@/styles/toastStyle";
 import { on } from "events";
+import Link from "next/link";
 
 interface HomeProps {
   user: {
@@ -108,12 +109,22 @@ export default function Painel({ user }: HomeProps) {
     }
   }
 
+  async function handleShareTask(id: string) {
+    await navigator.clipboard.writeText(
+      `${process.env.NEXT_PUBLIC_URL}/task/${id}`
+    )
+
+    toast.success("URL da tarefa copiada para área de transferência!", {
+      style: toastStyle,
+    })
+  }
+
   async function handleDeleteTask(id: string) {
     try {
       await toast.promise(
         async () => {
-          const taskRef = doc(db, "tasks", id);
-          await deleteDoc(taskRef);
+          const docRef = doc(db, "tasks", id);
+          await deleteDoc(docRef);
         },
         {
           loading: "Deletando tarefa...",
@@ -192,14 +203,23 @@ export default function Painel({ user }: HomeProps) {
                           <label className="px-0.5 py-1.5 bg-red-600 text-xs text-white rounded">
                             PÚBLICO
                           </label>
-                          <button className="hover:scale-108 transition-all duration-400">
+                          <button className="hover:scale-108 transition-all duration-400" onClick={() => handleShareTask(task.id)}>
                             <FaShare size={22} color="#fb2c36" />
                           </button>
                         </div>
                       )}
 
                       <div className="flex items-center justify-between gap-2 w-full">
-                        <p className="grow whitespace-pre-wrap">{task.task}</p>
+                        {task.isPublic ? (
+                          <Link href={`/tarefa/${task.id}`} className="grow whitespace-pre-wrap">
+                            <p>{task.task}</p>
+                          </Link>
+                        ) : (
+                          <p className="grow whitespace-pre-wrap">
+                            {task.task}
+                          </p>
+                        )}
+
                         <button
                           className="text-neutral-600 hover:text-red-700 transition-all duration-400"
                           onClick={() => handleDeleteTask(task.id)}
