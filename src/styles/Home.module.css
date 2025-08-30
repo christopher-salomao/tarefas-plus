@@ -1,0 +1,19 @@
+.box {
+  color: #000000;
+  background-color: #fafafa;
+  padding: 14px 44px;
+  border-radius: 4px;
+  transition: transform 0.4s;
+}
+
+.box:hover {
+  transform: scale(1.08);
+}
+
+@media screen and (max-width: 640px) {
+  .box {
+    width: 80%;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+}
