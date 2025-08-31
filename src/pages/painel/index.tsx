@@ -19,23 +19,15 @@ import Head from "next/head";
 import { FaShare, FaTrashCan } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import { toastStyle } from "@/styles/toastStyle";
-import { on } from "events";
 import Link from "next/link";
+
+import type { TaskProps } from "@/interfaces/tasksProps";
 
 interface HomeProps {
   user: {
     name: string;
     email: string;
   };
-}
-
-interface TaskProps {
-  id: string;
-  created: Date;
-  task: string;
-  isPublic: boolean;
-  userName: string;
-  userEmail: string;
 }
 
 export default function Painel({ user }: HomeProps) {
