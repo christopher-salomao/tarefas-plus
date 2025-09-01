@@ -156,16 +156,30 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
                 className="w-full p-3.5  border-neutral-500 rounded border-[1.5px] mb-3.5"
               >
                 <div className="flex items-center justify-between mb-3.5">
-                  <div className="flex items-center w-fit px-1 py-0.5 rounded gap-2 bg-neutral-400">
-                    <img
-                      src={comment.userImage}
-                      alt={comment.userName}
-                      className="w-5 h-5 rounded-full"
-                    />
-                    <span className="text-xs font-bold text-white">
-                      {comment.userName}
-                    </span>
+                  <div className="flex items-center w-fit gap-2 ">
+                    <div className="flex items-center gap-2  px-1 py-0.5 rounded bg-neutral-400">
+                      <img
+                        src={comment.userImage}
+                        alt={comment.userName}
+                        className="w-5 h-5 rounded-full"
+                      />
+                      <span className="md:text-sm text-white">
+                        {comment.userName}
+                      </span>
+                    </div>
+
+                    {session?.user?.email === comment.userEmail && (
+                      <button
+                        className="text-neutral-600 hover:text-red-700 transition-all duration-400"
+                        onClick={() =>
+                          handleDeleteComment(comment.id as string)
+                        }
+                      >
+                        <FaTrashCan size={20} />
+                      </button>
+                    )}
                   </div>
+
                   <span className="text-xs">{String(comment.created)}</span>
                 </div>
 
@@ -173,14 +187,6 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
                   <p className="whitespace-pre-wrap w-full">
                     {comment.comment}
                   </p>
-                  {session?.user?.email === comment.userEmail && (
-                    <button
-                      className="text-neutral-600 hover:text-red-700 transition-all duration-400"
-                      onClick={() => handleDeleteComment(comment.id as string)}
-                    >
-                      <FaTrashCan size={20} />
-                    </button>
-                  )}
                 </div>
               </article>
             ))

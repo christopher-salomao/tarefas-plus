@@ -1,4 +1,3 @@
-import { Secret } from './../../../../node_modules/next-auth/src/jwt/types';
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
