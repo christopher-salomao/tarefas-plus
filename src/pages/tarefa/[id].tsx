@@ -12,6 +12,7 @@ import {
   addDoc,
   getDocs,
   orderBy,
+  deleteDoc,
 } from "firebase/firestore";
 
 import type { TaskProps } from "@/interfaces/tasksProps";
@@ -39,7 +40,7 @@ interface CommentProps {
 
 function Tarefa({ task, allComments }: TeskDetailsProps) {
   const [input, setInput] = useState("");
-  const comments =allComments || [];
+  const [comments, setComments] = useState<CommentProps[]>(allComments || []);
 
   const { data: session } = useSession();
 
@@ -50,7 +51,7 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
 
     toast.promise(
       async () => {
-        await addDoc(collection(db, "comments"), {
+        const docRef = await addDoc(collection(db, "comments"), {
           comment: input,
           userName: session?.user?.name,
           userEmail: session?.user?.email,
@@ -59,12 +60,46 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
           created: new Date(),
         });
 
+        const data: CommentProps = {
+          id: docRef.id,
+          comment: input,
+          userName: session?.user?.name ?? "",
+          userEmail: session?.user?.email ?? "",
+          userImage: session?.user?.image ?? "",
+          taskID: task?.id ?? "",
+          created: new Date().toLocaleDateString("pt-BR"),
+        };
+
+        setComments((prevState) => [...prevState, data]);
+
         setInput("");
       },
       {
         loading: "Enviando comentário...",
         success: "Comentário enviado com sucesso!",
         error: "Erro ao enviar comentário!",
+      },
+      {
+        style: toastStyle,
+      }
+    );
+  }
+
+  async function handleDeleteComment(id: string) {
+    toast.promise(
+      async () => {
+        const docRef = doc(db, "comments", id);
+        await deleteDoc(docRef);
+
+        const commentsFiltered = comments.filter(
+          (comment) => comment.id !== id
+        );
+        setComments(commentsFiltered);
+      },
+      {
+        loading: "Deletando comentário...",
+        success: "Comentário deletado com sucesso!",
+        error: "Erro ao deletar comentário!",
       },
       {
         style: toastStyle,
@@ -141,7 +176,7 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
                   {session?.user?.email === comment.userEmail && (
                     <button
                       className="text-neutral-600 hover:text-red-700 transition-all duration-400"
-                      // onClick={() => handleDeleteComment(comment.id)}
+                      onClick={() => handleDeleteComment(comment.id as string)}
                     >
                       <FaTrashCan size={20} />
                     </button>
@@ -150,9 +185,7 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
               </article>
             ))
           ) : (
-            <p className="text-xl font-bold my-3.5">
-              Nenhum comentário encontrado
-            </p>
+            <p className="text-xl font-bold my-3.5">Nenhum comentário ainda</p>
           )}
         </section>
       </div>
@@ -207,12 +240,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 
   const commentsRef = collection(db, "comments");
-  const q = query(commentsRef, where("taskId", "==", id), orderBy("created", "asc"));
+  const q = query(
+    commentsRef,
+    where("taskId", "==", id),
+    orderBy("created", "asc")
+  );
 
   const commentsSnapshot = await getDocs(q);
 
   const allComments: CommentProps[] = [];
-
 
   commentsSnapshot.forEach((doc) => {
     allComments.push({
@@ -222,7 +258,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       userName: doc.data().userName,
       userEmail: doc.data().userEmail,
       userImage: doc.data().userImage,
-      created: new Date(doc.data().created.seconds * 1000).toLocaleDateString("pt-BR"),
+      created: new Date(doc.data().created.seconds * 1000).toLocaleDateString(
+        "pt-BR"
+      ),
     });
   });
 

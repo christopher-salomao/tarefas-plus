@@ -45,7 +45,6 @@ export default function Painel({ user }: HomeProps) {
       );
 
       onSnapshot(q, (snapshot) => {
-        console.log(snapshot);
         let list: TaskProps[] = [];
 
         snapshot.forEach((doc) => {
@@ -104,32 +103,28 @@ export default function Painel({ user }: HomeProps) {
   async function handleShareTask(id: string) {
     await navigator.clipboard.writeText(
       `${process.env.NEXT_PUBLIC_URL}/task/${id}`
-    )
+    );
 
     toast.success("URL da tarefa copiada para área de transferência!", {
       style: toastStyle,
-    })
+    });
   }
 
   async function handleDeleteTask(id: string) {
-    try {
-      await toast.promise(
-        async () => {
-          const docRef = doc(db, "tasks", id);
-          await deleteDoc(docRef);
-        },
-        {
-          loading: "Deletando tarefa...",
-          success: "Tarefa deletada com sucesso!",
-          error: "Erro ao deletar tarefa!",
-        },
-        {
-          style: toastStyle,
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    await toast.promise(
+      async () => {
+        const docRef = doc(db, "tasks", id);
+        await deleteDoc(docRef);
+      },
+      {
+        loading: "Deletando tarefa...",
+        success: "Tarefa deletada com sucesso!",
+        error: "Erro ao deletar tarefa!",
+      },
+      {
+        style: toastStyle,
+      }
+    );
   }
 
   return (
@@ -195,7 +190,10 @@ export default function Painel({ user }: HomeProps) {
                           <label className="px-0.5 py-1.5 bg-red-600 text-xs text-white rounded">
                             PÚBLICO
                           </label>
-                          <button className="hover:scale-108 transition-all duration-400" onClick={() => handleShareTask(task.id)}>
+                          <button
+                            className="hover:scale-108 transition-all duration-400"
+                            onClick={() => handleShareTask(task.id)}
+                          >
                             <FaShare size={22} color="#fb2c36" />
                           </button>
                         </div>
@@ -203,7 +201,10 @@ export default function Painel({ user }: HomeProps) {
 
                       <div className="flex items-center justify-between gap-2 w-full">
                         {task.isPublic ? (
-                          <Link href={`/tarefa/${task.id}`} className="grow whitespace-pre-wrap">
+                          <Link
+                            href={`/tarefa/${task.id}`}
+                            className="grow whitespace-pre-wrap"
+                          >
                             <p>{task.task}</p>
                           </Link>
                         ) : (
