@@ -11,6 +11,7 @@ import {
   getDoc,
   addDoc,
   getDocs,
+  orderBy,
 } from "firebase/firestore";
 
 import type { TaskProps } from "@/interfaces/tasksProps";
@@ -19,6 +20,7 @@ import Head from "next/head";
 import { Textarea } from "@/components/textarea";
 import toast from "react-hot-toast";
 import { toastStyle } from "@/styles/toastStyle";
+import { FaTrashCan } from "react-icons/fa6";
 
 interface TeskDetailsProps {
   task: TaskProps;
@@ -26,6 +28,7 @@ interface TeskDetailsProps {
 }
 
 interface CommentProps {
+  id: string;
   taskID: string;
   comment: string;
   userName: string;
@@ -36,10 +39,9 @@ interface CommentProps {
 
 function Tarefa({ task, allComments }: TeskDetailsProps) {
   const [input, setInput] = useState("");
+  const comments =allComments || [];
 
   const { data: session } = useSession();
-
-  console.log(allComments);
 
   async function handleComment(e: FormEvent) {
     e.preventDefault();
@@ -112,10 +114,45 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
 
         <section className="w-full max-w-5xl flex flex-col mt-10">
           <h2 className="text-2xl font-bold my-3.5">Todos os comentários</h2>
-          {allComments.length > 0 ? (
-            <p></p>
-          ): (
-            <p className="text-xl font-bold my-3.5">Nenhum comentário ainda</p>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <article
+                key={comment.id}
+                className="w-full p-3.5  border-neutral-500 rounded border-[1.5px] mb-3.5"
+              >
+                <div className="flex items-center justify-between mb-3.5">
+                  <div className="flex items-center w-fit px-1 py-0.5 rounded gap-2 bg-neutral-400">
+                    <img
+                      src={comment.userImage}
+                      alt={comment.userName}
+                      className="w-5 h-5 rounded-full"
+                    />
+                    <span className="text-xs font-bold text-white">
+                      {comment.userName}
+                    </span>
+                  </div>
+                  <span className="text-xs">{String(comment.created)}</span>
+                </div>
+
+                <div className="w-full flex items-center justify-between">
+                  <p className="whitespace-pre-wrap w-full">
+                    {comment.comment}
+                  </p>
+                  {session?.user?.email === comment.userEmail && (
+                    <button
+                      className="text-neutral-600 hover:text-red-700 transition-all duration-400"
+                      // onClick={() => handleDeleteComment(comment.id)}
+                    >
+                      <FaTrashCan size={20} />
+                    </button>
+                  )}
+                </div>
+              </article>
+            ))
+          ) : (
+            <p className="text-xl font-bold my-3.5">
+              Nenhum comentário encontrado
+            </p>
           )}
         </section>
       </div>
@@ -170,7 +207,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 
   const commentsRef = collection(db, "comments");
-  const q = query(commentsRef, where("taskId", "==", id));
+  const q = query(commentsRef, where("taskId", "==", id), orderBy("created", "asc"));
 
   const commentsSnapshot = await getDocs(q);
 
@@ -179,6 +216,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   commentsSnapshot.forEach((doc) => {
     allComments.push({
+      id: doc.id,
       taskID: doc.data().taskId,
       comment: doc.data().comment,
       userName: doc.data().userName,
@@ -187,8 +225,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       created: new Date(doc.data().created.seconds * 1000).toLocaleDateString("pt-BR"),
     });
   });
-
-  console.log(allComments);
 
   return {
     props: {
