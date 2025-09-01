@@ -2,6 +2,8 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 import Link from "next/link";
 
+import defoultAvatar from "../../public/assets/default_avatar.png";
+
 export function Header() {
   const { data: session, status } = useSession();
 
@@ -31,15 +33,20 @@ export function Header() {
             className="py-2 px-2 md:px-8 rounded-full border-[1.5px] border-red-600 cursor-pointer transition-all duration-400 hover:scale-108 hover:bg-red-600 hover:font-bold flex items-center gap-2"
             onClick={() => signOut()}
           >
-            <span className="md:inline-block hidden">Olá {session?.user?.name}</span>
+            <span className="md:inline-block hidden">
+              Olá {session?.user?.name}
+            </span>
             {session.user?.image && (
               <img
                 src={session?.user?.image as string}
                 alt={session?.user?.name ?? "User"}
                 className="w-8 h-8 rounded-full"
                 onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src =
-                    "../../public/assets/default_avatar.png";
+                  (e.currentTarget as HTMLImageElement).src = defoultAvatar.src;
+
+                  (e.currentTarget as HTMLImageElement).classList.add(
+                    "bg-neutral-100"
+                  )
                 }}
               />
             )}
