@@ -44,7 +44,7 @@ export default function Painel({ user }: HomeProps) {
         where("userEmail", "==", user?.email)
       );
 
-      const onsub = onSnapshot(q, (snapshot) => {
+      onSnapshot(q, (snapshot) => {
         console.log(snapshot);
         let list: TaskProps[] = [];
 
@@ -183,7 +183,7 @@ export default function Painel({ user }: HomeProps) {
                 Minhas tarefas
               </h1>
 
-              {tasksList.length > 0 && (
+              {tasksList.length > 0 ? (
                 <>
                   {tasksList.map((task) => (
                     <article
@@ -222,6 +222,10 @@ export default function Painel({ user }: HomeProps) {
                     </article>
                   ))}
                 </>
+              ) : (
+                <p className="text-center font-bold text-2xl">
+                  Vocês ainda não possui tarefas cadastradas
+                </p>
               )}
             </div>
           </section>

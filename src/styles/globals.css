@@ -18,6 +18,10 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .contentor {
-  height: calc(100vh - 76px);
+  min-height: calc(100vh - 76px);
 }
