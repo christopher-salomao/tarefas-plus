@@ -8,15 +8,12 @@ Uma plataforma moderna de gerenciamento de tarefas com recursos de compartilhame
 * Design Responsivo: Interface adaptada para todos os dispositivos
 
 ## 🛠️ Tecnologias Utilizadas
-Next.js: Framework React para renderização do lado do servidor
+* Next.js: Framework React para renderização do lado do servidor
+* Next Auth: Autenticação simplificada com provedores sociais
+* Firebase: Banco de dados em tempo real e hospedagem
+* Tailwind CSS: Framework CSS utilitário para estilização moderna
 
-Next Auth: Autenticação simplificada com provedores sociais
-
-Firebase: Banco de dados em tempo real e hospedagem
-
-Tailwind CSS: Framework CSS utilitário para estilização moderna
-
-🚀 Como Executar o Projeto
+## 🚀 Como Executar o Projeto
 Pré-requisitos
 Node.js (versão 14 ou superior)
 
