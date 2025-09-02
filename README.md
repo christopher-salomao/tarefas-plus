@@ -1,13 +1,13 @@
 Uma plataforma moderna de gerenciamento de tarefas com recursos de compartilhamento e colaboração. Desenvolvida como parte de um curso com melhorias visuais significativas utilizando Tailwind CSS.
 
-✨ Funcionalidades
+## ✨ Funcionalidades
 * Tarefas Públicas: Crie tarefas públicas e compartilhe o link para colaboração
 * Tarefas Privadas: Mantenha tarefas pessoais sem opção de compartilhamento
 * Sistema de Comentários: Interaja com outras pessoas através de comentários em tarefas públicas
 * Autenticação Social: Login simplificado através do Google
 * Design Responsivo: Interface adaptada para todos os dispositivos
 
-🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 Next.js: Framework React para renderização do lado do servidor
 
 Next Auth: Autenticação simplificada com provedores sociais
@@ -24,7 +24,7 @@ Conta no Firebase
 
 Conta no Google Cloud para OAuth
 
-🚀 **Instalação**
+## 🚀 **Instalação**
 
 1. Clone o repositório:
 
@@ -85,23 +85,23 @@ yarn dev
 * **npm run build ou yarn build** - Constrói a aplicação para produção
 * **npm run start ou yarn start** - Inicia o servidor de produção
 
-🎨 **Personalização**
+##  **Personalização**
 Este projeto utiliza Tailwind CSS para estilização, oferecendo uma experiência visual moderna e customizável. Para modificar o tema:
 
 1. Adicione ou modifique as classes diretamente nos componentes
 2. Consulte a documentação do Tailwind CSS para mais opções de personalização: https://tailwindcss.com/docs
 
-📱 **Responsividade**
+## 📱 **Responsividade**
 A aplicação é totalmente responsiva e adaptada para:
 
 * Dispositivos móveis
 * Tablets
 * Desktops
 
-🔒 **Autenticação**
+## 🔒 **Autenticação**
 O sistema de autenticação utiliza NextAuth.js com provedor do Google, garantindo segurança e facilidade de uso para os usuários.
 
-📊 **Estrutura de Dados**
+## 📊 **Estrutura de Dados**
 As tarefas são armazenadas no Firebase Firestore com a seguinte estrutura:
 
 ```json
@@ -126,17 +126,17 @@ As tarefas são armazenadas no Firebase Firestore com a seguinte estrutura:
     }
   }
 }
+```
+## 🤝 **Contribuição**
 
 Este é um projeto de curso com modificações visuais. Contribuições são bem-vindas para:
-
-🤝 **Contribuição**
 
 * Melhorias de acessibilidade
 * Novos recursos funcionais
 * Otimizações de performance
 * Correções de bugs
 
-📄 **Licença**
+## 📄 **Licença**
 Este projeto foi desenvolvido para fins educativos e não possui fins comerciais.
 
 Desenvolvido como parte de um curso de desenvolvimento web.
