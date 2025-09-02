@@ -2,7 +2,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 import Link from "next/link";
 
-import defoultAvatar from "../../public/assets/default_avatar.png";
+import defaultAvatar from "../../public/assets/default_avatar.png";
 
 export function Header() {
   const { data: session, status } = useSession();
@@ -42,7 +42,7 @@ export function Header() {
                 alt={session?.user?.name ?? "User"}
                 className="w-8 h-8 rounded-full"
                 onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = defoultAvatar.src;
+                  (e.currentTarget as HTMLImageElement).src = defaultAvatar.src;
 
                   (e.currentTarget as HTMLImageElement).classList.add(
                     "bg-neutral-100"

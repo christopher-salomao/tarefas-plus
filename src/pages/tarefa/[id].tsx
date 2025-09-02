@@ -23,6 +23,8 @@ import toast from "react-hot-toast";
 import { toastStyle } from "@/styles/toastStyle";
 import { FaTrashCan } from "react-icons/fa6";
 
+import defaultAvatar from "../../../public/assets/default_avatar.png"
+
 interface TeskDetailsProps {
   task: TaskProps;
   allComments: CommentProps[];
@@ -162,6 +164,14 @@ function Tarefa({ task, allComments }: TeskDetailsProps) {
                         src={comment.userImage}
                         alt={comment.userName}
                         className="w-5 h-5 rounded-full"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src =
+                            defaultAvatar.src;
+
+                          (e.currentTarget as HTMLImageElement).classList.add(
+                            "bg-neutral-100"
+                          );
+                        }}
                       />
                       <span className="md:text-sm text-white">
                         {comment.userName}
